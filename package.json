@@ -1,0 +1,17 @@
+{
+  "name": "githubwatch",
+  "private": true,
+  "packageManager": "pnpm@10.13.1",
+  "scripts": {
+    "dev": "pnpm --filter @githubwatch/shared build && pnpm --parallel --filter @githubwatch/api --filter @githubwatch/web dev",
+    "build": "pnpm --filter @githubwatch/shared build && pnpm -r --filter \"!@githubwatch/shared\" build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm --filter @githubwatch/shared build && pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.36.0",
+    "@typescript-eslint/parser": "^8.36.0",
+    "eslint": "^9.30.0",
+    "typescript": "^5.8.3"
+  }
+}

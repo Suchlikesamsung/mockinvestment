@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Asset {
+  id        String   @id @default(cuid())
+  symbol    String   @unique
+  code      String
+  nameKo    String
+  nameEn    String?
+  market    String
+  rank      Int
+  marketCap Int
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([code])
+  @@index([nameKo])
+  @@index([market])
+  @@index([rank])
+}
+
+model Portfolio {
+  id          String   @id @default(cuid())
+  name        String
+  cash        Decimal
+  initialCash Decimal
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  positions Position[]
+  orders    Order[]
+  trades    Trade[]
+}
+
+model Position {
+  id           String   @id @default(cuid())
+  portfolioId  String
+  symbol       String
+  quantity     Decimal
+  averagePrice Decimal
+  marketPrice  Decimal
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@unique([portfolioId, symbol])
+  @@index([symbol])
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  portfolioId String
+  symbol      String
+  side        OrderSide
+  quantity    Decimal
+  status      OrderStatus
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  trades    Trade[]
+
+  @@index([portfolioId, createdAt])
+  @@index([symbol])
+}
+
+model Trade {
+  id          String    @id @default(cuid())
+  orderId     String
+  portfolioId String
+  symbol      String
+  side        OrderSide
+  price       Decimal
+  quantity    Decimal
+  fee         Decimal
+  priceSource String
+  marketTime  DateTime?
+  executedAt  DateTime  @default(now())
+
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@index([portfolioId, executedAt])
+  @@index([symbol])
+}
+
+enum OrderSide {
+  BUY
+  SELL
+}
+
+enum OrderStatus {
+  PENDING
+  FILLED
+  REJECTED
+}
