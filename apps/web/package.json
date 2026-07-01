@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@githubwatch/shared": "workspace:*",
+    "@tanstack/react-query": "^5.101.2",
     "lightweight-charts": "^5.2.0",
+    "lucide-react": "^1.22.0",
     "next": "^15.3.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
