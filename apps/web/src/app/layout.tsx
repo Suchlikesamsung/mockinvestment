@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "GitHubWatch",
+  title: "Paper",
   description: "Educational paper trading simulator"
 };
 
